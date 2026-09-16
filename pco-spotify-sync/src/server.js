@@ -114,6 +114,9 @@ async function tick() {
   store.set('scheduledPeriod', period);
   try { await sync.run(); } catch (error) { console.error('Scheduled sync:', error.message); }
 }
-server.listen(Number(env.PORT || 3000), '0.0.0.0', () => { console.log(`Listening; monthly sync on last Wednesday at ${schedule.hour}:00 ${schedule.timeZone}`); void tick(); });
+server.listen(Number(env.PORT || 3000), '0.0.0.0', () => {
+  console.log(`Listening on port ${env.PORT || 3000}; monthly sync on last Wednesday at ${schedule.hour}:00 ${schedule.timeZone}`);
+  void tick();
+});
 const timer = setInterval(() => void tick(), 60000);
 process.on('SIGTERM', () => { clearInterval(timer); server.close(() => process.exit(0)); });
