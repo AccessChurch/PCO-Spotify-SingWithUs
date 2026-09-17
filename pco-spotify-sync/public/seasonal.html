@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Seasonal pre-service playlist</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #19352e; background: #f4f7f3; }
+    body { max-width: 1120px; margin: 40px auto; padding: 0 24px 60px; }
+    h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -1.5px; margin-bottom: 12px; }
+    h2 { font-size: 23px; margin: 0 0 12px; } h3 { font-size: 17px; }
+    p { line-height: 1.6; } a { color: #146849; } nav { margin-bottom: 36px; }
+    .meta { color: #5d7268; font-size: 14px; } .eyebrow { letter-spacing: 2px; font-size: 12px; }
+    .card { background: white; border: 1px solid #d4dfd7; border-radius: 12px; padding: 24px; margin: 20px 0; }
+    .toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+    button, input { font: inherit; padding: 10px 14px; border: 1px solid #a8bdb1; border-radius: 7px; }
+    button { cursor: pointer; background: white; color: #19352e; }
+    button:hover { background: #e0eee5; } button:disabled { opacity: .45; cursor: default; }
+    button.primary { background: #19352e; color: white; } input { box-sizing: border-box; max-width: 100%; width: 450px; }
+    label { display: block; margin-top: 16px; margin-bottom: 8px; }
+    .track { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 0; border-bottom: 1px solid #e8eee9; }
+    .track:last-child { border-bottom: 0; } .track p { margin: 4px 0; } .track .toolbar { flex-shrink: 0; margin: 0; }
+    .track button { padding: 7px 10px; font-size: 14px; } .track a { font-weight: 600; }
+    #message { white-space: pre-wrap; padding: 16px; background: #e8efe9; border-radius: 8px; }
+    #recovery { background: #fff0d8; } .warning { color: #865300; } summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
+    [hidden] { display: none !important; } .badge { padding: 3px 8px; border-radius: 12px; background: #e8efe9; font-size: 12px; }
+    @media(max-width: 640px) { body { padding: 0 16px 36px; } .card { padding: 18px; } .track { align-items: start; flex-direction: column; gap: 8px; } }
+  </style>
+  <script src="/seasonal.js" defer></script>
+</head>
+<body>
+  <nav><a href="/">← Planning Center song rotation</a></nav>
+  <header>
+    <p class="eyebrow">SEASONAL / PRE-SERVICE</p>
+    <h1>A fresh playlist. A familiar feel.</h1>
+    <p>Build a full replacement from Spotify search suggestions based on your current artists. Listen, choose songs, arrange the order, then approve and publish.</p>
+    <p class="meta">Reviews: second Wednesday of January and May · last Wednesday of July · 10 a.m. Eastern. Scheduled reviews never publish automatically.</p>
+    <a id="playlist-link" target="_blank" rel="noopener noreferrer">Open pre-service playlist in Spotify ↗</a>
+  </header>
+  <p id="message" role="status" aria-live="polite">Loading…</p>
+  <p id="status" class="meta"></p>
+  <section id="recovery" class="card" hidden>
+    <h2>Playlist recovery needed</h2>
+    <p>A write was interrupted or could not be verified. The playlist may be partially updated. Publishing is paused. Choose a saved backup below, preview it, then confirm restoration.</p>
+  </section>
+  <div class="toolbar">
+    <button id="create" class="primary">Create seasonal review</button>
+    <button id="refresh">Refresh status</button>
+    <a href="/">Connect or reconnect Spotify</a>
+  </div>
+  <section id="review" hidden>
+    <div class="card">
+      <h2>Full replacement proposal <span id="draft-state" class="badge"></span></h2>
+      <p id="draft-summary"></p>
+      <p id="shortfall" class="warning" hidden></p>
+      <p class="meta">Search matches artists, not audio energy or mood. Listen before approving. Suggestions omit explicit recordings; manually chosen recordings show an Explicit label when applicable.</p>
+      <div id="proposal"></div>
+      <div class="toolbar">
+        <button id="approve">Approve this order</button>
+        <button id="publish" class="primary">Publish approved playlist</button>
+        <button id="discard">Discard review</button>
+      </div>
+      <p class="meta">Publishing replaces the entire pre-service playlist and saves a backup first. Any edit clears approval.</p>
+    </div>
+    <section id="editor" class="card">
+      <h2>Choose your recordings</h2>
+      <label for="query">Search Spotify</label>
+      <div class="toolbar"><input id="query" placeholder="Song, artist, or album"><button id="search">Search</button></div>
+      <div id="search-results"></div>
+      <label for="manual">Add a specific Spotify track</label>
+      <div class="toolbar"><input id="manual" placeholder="Track URL, URI, or ID"><button id="add">Add to proposal</button></div>
+      <details><summary>More suggestions from your current artists</summary><div id="candidates"></div></details>
+    </section>
+    <details class="card"><summary>Original playlist / style reference</summary><p id="reference-info" class="meta"></p><div id="reference"></div></details>
+  </section>
+  <section class="card">
+    <h2>Saved playlist backups</h2>
+    <p class="meta">Each publish or restore saves the playlist it replaces. Restoring requires a separate preview and confirmation.</p>
+    <a href="/api/seasonal/backups" target="_blank" rel="noopener">Download backup data</a>
+    <div id="backups"></div>
+    <section id="restore-preview" hidden>
+      <h3>Review this restoration</h3><p id="restore-summary"></p><div id="restore-tracks"></div>
+      <button id="restore">Confirm restoration</button>
+    </section>
+  </section>
+</body>
+</html>
